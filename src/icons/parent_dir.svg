@@ -1,0 +1,4 @@
+<svg width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16" role="img" aria-label="Parent folder">
+    <path d="M 0.54,3.87 0.5,3 a 2,2 0 0 1 2,-2 H 6.172 A 2,2 0 0 1 7.586,1.586 L 8.414,2.414 A 2,2 0 0 0 9.828,3 h 3.982 a 2,2 0 0 1 1.992,2.181 l -0.637,7 A 2,2 0 0 1 13.174,14 H 2.826 A 2,2 0 0 1 0.835,12.181 l -0.637,-7 A 2,2 0 0 1 0.54,3.871 Z M 2.19,4 A 1,1 0 0 0 1.194,5.09 l 0.637,7 A 1,1 0 0 0 2.826,13 h 10.348 a 1,1 0 0 0 0.995,-0.91 l 0.637,-7 A 1,1 0 0 0 13.81,4 Z M 6.88,2.293 A 1,1 0 0 0 6.172,2 H 2.5 a 1,1 0 0 0 -1,0.981 L 1.506,3.12 Q 1.829,3.001 2.19,3 h 5.396 z"/>
+    <path style="fill:none;stroke:currentColor;stroke-width:0.982677;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:normal" d="M 8.0409609,11.455505 V 5.9914121 L 5.981782,8.0505895 8.1277453,5.9474947 10.100138,8.0505895"/>
+</svg>

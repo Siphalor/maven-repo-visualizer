@@ -1,0 +1,9 @@
+vendor/
+
+.env
+
+# Tools
+.php-cs-fixer.cache
+
+# IDEs
+.idea/
