@@ -5,8 +5,8 @@ namespace MavenRV;
 enum DirEntryType
 {
     case ARTIFACT_DIR;
-    case OTHER_DIR;
     case VERSION_DIR;
+    case OTHER_DIR;
     case ARTIFACT_FILE;
     case SOURCES_ARTIFACT_FILE;
     case METADATA_FILE;
@@ -20,6 +20,6 @@ enum DirEntryType
 
     public function isFile(): bool
     {
-        return $this == self::ARTIFACT_FILE || $this == self::METADATA_FILE || $this == self::HASH_FILE || $this == self::OTHER_FILE;
+        return $this == self::ARTIFACT_FILE || $this == self::SOURCES_ARTIFACT_FILE || $this == self::METADATA_FILE || $this == self::HASH_FILE || $this == self::OTHER_FILE;
     }
 }

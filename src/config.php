@@ -17,3 +17,6 @@ if (isset($_ENV['MAVENRV_ROOT_DIR'])) {
 }
 define('VERSIONS_SORT_BY', $_ENV['MAVENRV_VERSIONS_SORT_BY'] ?? 'last_modified'); # last_modified, name
 define('VERSIONS_SORT_ORDER', $_ENV['MAVENRV_VERSIONS_SORT_ORDER'] ?? 'desc'); # desc, asc
+
+# Assets
+define('ASSETS_SERVE_PATH', $_ENV['MAVENRV_ASSETS_SERVE_PATH'] ?? '$EMBED');
