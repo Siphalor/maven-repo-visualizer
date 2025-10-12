@@ -15,13 +15,15 @@
 		}
 	},
 	"scripts": {
-		"php-cs-fixer": "php-cs-fixer --rules=@PSR2 fix src"
+		"php-cs-fixer": "php-cs-fixer --rules=@PSR2 fix src",
+		"test": "phpunit tests"
 	},
 	"require": {
 		"erusev/parsedown": "^1.7",
 		"vlucas/phpdotenv": "^5.6"
 	},
 	"require-dev": {
-		"friendsofphp/php-cs-fixer": "^3.88"
+		"friendsofphp/php-cs-fixer": "^3.88",
+		"phpunit/phpunit": "^12"
 	}
 }

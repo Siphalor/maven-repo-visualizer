@@ -5,6 +5,7 @@ require_once __DIR__ . '/config.php';
 
 use MavenRV\DirEntry;
 use MavenRV\DirEntryType;
+use MavenRV\SemverLikeComparator;
 
 function format_markdown(string $text): string
 {
@@ -35,7 +36,15 @@ function is_entry_included(DirEntry $dirEntry): bool
     return true;
 }
 
-const TYPE_SORT_ORDER = array(DirEntryType::OTHER_DIR, DirEntryType::ARTIFACT_DIR, DirEntryType::VERSION_DIR, DirEntryType::ARTIFACT_FILE, DirEntryType::METADATA_FILE, DirEntryType::HASH_FILE);
+const TYPE_SORT_ORDER = array(
+        DirEntryType::OTHER_DIR,
+        DirEntryType::ARTIFACT_DIR,
+        DirEntryType::VERSION_DIR,
+        DirEntryType::ARTIFACT_FILE,
+        DirEntryType::SOURCES_ARTIFACT_FILE,
+        DirEntryType::METADATA_FILE,
+        DirEntryType::HASH_FILE
+);
 
 /**
  * @param DirEntry[] $entries
@@ -49,7 +58,17 @@ function sort_entries(array $entries): array
         if ($a_type_index !== $b_type_index) {
             return $a_type_index <=> $b_type_index;
         }
-        return strcmp($a->name, $b->name);
+
+        if ($a->type !== DirEntryType::VERSION_DIR) {
+            return strcmp($a->name, $b->name);
+        }
+
+        if (VERSIONS_SORT_BY === 'name') {
+            $cmp = SemverLikeComparator::compare($a->name, $b->name);
+        } else {
+            $cmp = $a->lastModified <=> $b->lastModified;
+        }
+        return VERSIONS_SORT_ORDER === 'desc' ? -$cmp : $cmp;
     });
     return $entries;
 }
