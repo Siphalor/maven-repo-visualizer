@@ -268,7 +268,7 @@ $directory = \MavenRV\Directory::fromPath($absolute_dir_path);
 </head>
 <body>
 <main>
-    <h1>Index of <span class="fancy-quotes"><?= basename($dir_path) ?: '/' ?></span></h1>
+    <h1>Index of <span class="fancy-quotes"><?= htmlspecialchars(basename($dir_path)) ?: '/' ?></span></h1>
     <p>Full path: /<?php
 
 $path_parts = array_filter(explode('/', substr($dir_path, 1)));
@@ -312,16 +312,16 @@ foreach ($entries as $entry) {
     ?>
         <tr>
             <td class="short-min-width"><a
-                        href="<?= $entry->name ?>"><?php print_entry_icon(get_entry_icon_name($entry)) ?></a></td>
-            <td><a href="<?= $entry->name ?>"><?= $entry->name ?></a><?php
+                        href="<?= urlencode($entry->name) ?>"><?php print_entry_icon(get_entry_icon_name($entry)) ?></a></td>
+            <td><a href="<?= urlencode($entry->name) ?>"><?= htmlspecialchars($entry->name) ?></a><?php
             if ($entry->hashEntries) {
                 $hashes_checkbox_id = "hashes-" . sha1($entry->name);
                 ?> <span class="hashes-trigger"><?php
                     print_entry_icon("hash");
-                ?><div class="hashes">Hashes for <?= $entry->name ?>:<ul><?php
+                ?><div class="hashes">Hashes for <?= htmlspecialchars($entry->name) ?>:<ul><?php
                         foreach ($entry->hashEntries as $hashEntry) {
                             if ($hashEntry->size < 1024) {
-                                ?><li><span class="type"><?= $hashEntry->extension ?>:</span> <span class="hash"><?=
+                                ?><li><span class="type"><?= htmlspecialchars($hashEntry->extension) ?>:</span> <span class="hash"><?=
                             htmlspecialchars(file_get_contents($hashEntry->path()))
                                 ?></span><?php
                             }
