@@ -42,8 +42,11 @@ const TYPE_SORT_ORDER = array(
         DirEntryType::ARTIFACT_DIR,
         DirEntryType::VERSION_DIR,
         DirEntryType::ARTIFACT_FILE,
+        DirEntryType::MAVEN_METADATA_FILE,
         DirEntryType::SOURCES_ARTIFACT_FILE,
-        DirEntryType::METADATA_FILE,
+        DirEntryType::MAVEN_POM_FILE,
+        DirEntryType::GRADLE_MODULE_FILE,
+        DirEntryType::OTHER_FILE,
         DirEntryType::HASH_FILE
 );
 
@@ -103,7 +106,9 @@ function get_entry_icon(DirEntry $entry): DirEntryIcon
             return DirEntryIcon::ARTIFACT_FILE;
         case DirEntryType::SOURCES_ARTIFACT_FILE:
             return DirEntryIcon::SOURCES_ARTIFACT_FILE;
-        case DirEntryType::METADATA_FILE:
+        case DirEntryType::MAVEN_METADATA_FILE:
+        case DirEntryType::MAVEN_POM_FILE:
+        case DirEntryType::GRADLE_MODULE_FILE:
             return DirEntryIcon::METADATA_FILE;
         case DirEntryType::ARTIFACT_DIR:
             return DirEntryIcon::ARTIFACT_DIR;
@@ -121,7 +126,11 @@ function get_entry_icon(DirEntry $entry): DirEntryIcon
 $dir_path = $_SERVER['SCRIPT_NAME'];
 $absolute_dir_path = $_SERVER['DOCUMENT_ROOT'] . $dir_path;
 
-$directory = \MavenRV\Directory::fromPath($absolute_dir_path);
+$directory = DirEntry::forPath($absolute_dir_path);
+$directory->resolveDirectory();
+foreach (array_filter($directory->subEntries, fn ($entry) => $entry->type->isDirectory()) as $subDir) {
+    $subDir->resolveDirectory();
+}
 
 ?>
 <!doctype html>
@@ -156,10 +165,16 @@ foreach ($path_parts as $i => $path_part) {
     echo '</a>/';
 }
 ?></p>
+<?php
+if ($directory->versionMetadata !== null) {
+    $latest_version = $directory->versionMetadata->coordinates->version;
+    echo "<p>Latest version: $latest_version</p>";
+}
+?>
     <hr/>
     <?php
-    if (isset($directory->entries['README.md'])) {
-        $readme_path = $directory->entries['README.md']->path(); ?>
+    if (isset($directory->subEntries['README.md'])) {
+        $readme_path = $directory->subEntries['README.md']->path(); ?>
         <section class="rendered-markdown">
             <?= format_markdown(file_get_contents($readme_path)) ?>
         </section>
@@ -182,8 +197,9 @@ foreach ($path_parts as $i => $path_part) {
                 <td></td>
                 <td></td>
             </tr>
-        <?php }
-        $entries = sort_entries(filter_entries($directory->entries));
+        <?php
+        }
+$entries = sort_entries(filter_entries($directory->subEntries));
 foreach ($entries as $entry) {
     ?>
             <tr>

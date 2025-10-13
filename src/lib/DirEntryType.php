@@ -9,7 +9,9 @@ enum DirEntryType
     case OTHER_DIR;
     case ARTIFACT_FILE;
     case SOURCES_ARTIFACT_FILE;
-    case METADATA_FILE;
+    case MAVEN_METADATA_FILE;
+    case MAVEN_POM_FILE;
+    case GRADLE_MODULE_FILE;
     case HASH_FILE;
     case OTHER_FILE;
 
@@ -20,6 +22,12 @@ enum DirEntryType
 
     public function isFile(): bool
     {
-        return $this == self::ARTIFACT_FILE || $this == self::SOURCES_ARTIFACT_FILE || $this == self::METADATA_FILE || $this == self::HASH_FILE || $this == self::OTHER_FILE;
+        return $this == self::ARTIFACT_FILE
+            || $this == self::SOURCES_ARTIFACT_FILE
+            || $this == self::MAVEN_METADATA_FILE
+            || $this == self::MAVEN_POM_FILE
+            || $this == self::GRADLE_MODULE_FILE
+            || $this == self::HASH_FILE
+            || $this == self::OTHER_FILE;
     }
 }
