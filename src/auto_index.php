@@ -238,7 +238,7 @@ if ($directory->versionMetadata !== null) {
 $entries = sort_entries(filter_entries($directory->subEntries));
 foreach ($entries as $entry) {
     ?>
-            <tr>
+            <tr<?= $entry->versionMetadata && $entry->versionMetadata->relocatedTo ? ' class="relocated"' : '' ?>>
                 <td class="short-min-width"><a
                             href="<?= urlencode($entry->name) ?>"><?php print_entry_icon(get_entry_icon($entry)) ?></a>
                 </td>

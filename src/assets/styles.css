@@ -5,6 +5,7 @@
     --subtle-contrast-color: light-dark(#333030, #e8e3e0);
     --subtle-bg-color: color-mix(in srgb, var(--bg-color) 90%, var(--subtle-contrast-color));
     --text-color: light-dark(black, white);
+	--subtle-text-color: color-mix(in srgb, var(--text-color) 60%, var(--subtle-bg-color));
     --border-radius: 0.5rem;
 }
 
@@ -212,6 +213,10 @@ th, td {
             user-select: all;
         }
     }
+}
+
+.relocated {
+	color: var(--subtle-text-color);
 }
 
 .relocation-info {
