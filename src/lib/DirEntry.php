@@ -26,9 +26,13 @@ class DirEntry
      */
     public array $subEntries = array();
 
-    public static function forPath(string $path): DirEntry
+    public static function forPath(string $path): ?DirEntry
     {
         $fileInfo = new SplFileInfo($path);
+        if (!$fileInfo->isFile() && !$fileInfo->isDir()) {
+            return null;
+        }
+
         $entry = new DirEntry();
         $entry->location = $fileInfo->getPath();
         $entry->extension = $fileInfo->getExtension();

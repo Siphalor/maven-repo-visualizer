@@ -130,6 +130,10 @@ $dir_path = $_SERVER['SCRIPT_NAME'];
 $absolute_dir_path = $_SERVER['DOCUMENT_ROOT'] . $dir_path;
 
 $directory = DirEntry::forPath($absolute_dir_path);
+if ($directory == null) {
+    http_response_code(404);
+    exit;
+}
 $directory->resolveDirectory();
 foreach (array_filter($directory->subEntries, fn ($entry) => $entry->type->isDirectory()) as $subDir) {
     $subDir->resolveDirectory();
