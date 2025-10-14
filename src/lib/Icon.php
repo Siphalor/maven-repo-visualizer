@@ -2,7 +2,7 @@
 
 namespace MavenRV;
 
-enum DirEntryIcon
+enum Icon
 {
     case ARTIFACT_FILE;
     case SOURCES_ARTIFACT_FILE;
@@ -13,6 +13,7 @@ enum DirEntryIcon
     case VERSION_DIR;
     case OTHER_DIR;
     case HASH;
+    case ARCHIVED;
 
     public function iconName(): string
     {
@@ -26,6 +27,7 @@ enum DirEntryIcon
             self::VERSION_DIR => 'version_dir',
             self::OTHER_DIR => 'dir',
             self::HASH => 'hash',
+            self::ARCHIVED => 'archived',
         };
     }
 
@@ -41,6 +43,7 @@ enum DirEntryIcon
             self::VERSION_DIR => 'version directory',
             self::OTHER_DIR => 'directory',
             self::HASH => 'hash',
+            self::ARCHIVED => 'archived',
         };
     }
 }

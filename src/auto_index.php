@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/config.php';
 
 use MavenRV\DirEntry;
-use MavenRV\DirEntryIcon;
+use MavenRV\Icon;
 use MavenRV\DirEntryType;
 use MavenRV\SemverLikeComparator;
 
@@ -86,7 +86,7 @@ function human_file_size(int $bytes): string
     return round($bytes, 2) . ' ' . $units[$i];
 }
 
-function print_entry_icon(DirEntryIcon $icon): void
+function print_entry_icon(Icon $icon): void
 {
     if (ASSETS_SERVE_PATH === '$EMBED') {
         include __DIR__ . '/icons/' . $icon->iconName() . '.svg';
@@ -99,26 +99,29 @@ function print_entry_icon(DirEntryIcon $icon): void
     }
 }
 
-function get_entry_icon(DirEntry $entry): DirEntryIcon
+function get_entry_icon(DirEntry $entry): Icon
 {
+    if ($entry->versionMetadata && $entry->versionMetadata->relocatedTo && $entry->isDirectory()) {
+        return Icon::ARCHIVED;
+    }
     switch ($entry->type) {
         case DirEntryType::ARTIFACT_FILE:
-            return DirEntryIcon::ARTIFACT_FILE;
+            return Icon::ARTIFACT_FILE;
         case DirEntryType::SOURCES_ARTIFACT_FILE:
-            return DirEntryIcon::SOURCES_ARTIFACT_FILE;
+            return Icon::SOURCES_ARTIFACT_FILE;
         case DirEntryType::MAVEN_METADATA_FILE:
         case DirEntryType::MAVEN_POM_FILE:
         case DirEntryType::GRADLE_MODULE_FILE:
-            return DirEntryIcon::METADATA_FILE;
+            return Icon::METADATA_FILE;
         case DirEntryType::ARTIFACT_DIR:
-            return DirEntryIcon::ARTIFACT_DIR;
+            return Icon::ARTIFACT_DIR;
         case DirEntryType::VERSION_DIR:
-            return DirEntryIcon::VERSION_DIR;
+            return Icon::VERSION_DIR;
         default:
             if ($entry->type->isDirectory()) {
-                return DirEntryIcon::OTHER_DIR;
+                return Icon::OTHER_DIR;
             } else {
-                return DirEntryIcon::OTHER_FILE;
+                return Icon::OTHER_FILE;
             }
     }
 }
@@ -167,8 +170,37 @@ foreach ($path_parts as $i => $path_part) {
 ?></p>
 <?php
 if ($directory->versionMetadata !== null) {
-    $latest_version = $directory->versionMetadata->coordinates->version;
-    echo "<p>Latest version: $latest_version</p>";
+    $versionCoords = $directory->versionMetadata->coordinates; ?>
+        <h2>Usage</h2>
+        <div class="tabs">
+            <details name="usage">
+                <summary>Maven</summary>
+                <div class="content">
+                    <pre><code class="select-all">&lt;dependency&gt;
+    &lt;groupId&gt;<?= $versionCoords->groupId ?>&lt;/groupId&gt;
+    &lt;artifactId&gt;<?= $versionCoords->artifactId ?>&lt;/artifactId&gt;
+    &lt;version&gt;<?= $versionCoords->version ?>&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+            </details>
+            <details name="usage">
+                <summary>Gradle</summary>
+                <div class="content">
+                    <pre><code class="select-all">implementation("<?= $versionCoords->groupId ?>:<?= $versionCoords->artifactId ?>:<?= $versionCoords->version ?>")</code></pre>
+                </div>
+            </details>
+            <details name="usage">
+                <summary>Gradle (Version Catalog)</summary>
+                <div class="content">
+                    <pre><code>[versions]
+<?= $versionCoords->artifactId ?> = "<?= $versionCoords->version ?>"
+
+[libraries]
+<?= $versionCoords->artifactId ?> = { module = "<?= $versionCoords->groupId ?>:<?= $versionCoords->artifactId ?>", version.ref = "<?= $versionCoords->artifactId ?>" }</code></pre>
+            </details>
+        </div>
+<?php
+        $latest_version = $directory->versionMetadata->coordinates->version;
 }
 ?>
     <hr/>
@@ -192,7 +224,7 @@ if ($directory->versionMetadata !== null) {
         <tbody>
         <?php if ($dir_path !== '/') { ?>
             <tr class="special">
-                <td class="short-min-width"><a href=".."><?php print_entry_icon(DirEntryIcon::PARENT_DIR) ?></a></td>
+                <td class="short-min-width"><a href=".."><?php print_entry_icon(Icon::PARENT_DIR) ?></a></td>
                 <td><a href="..">Parent directory</a></td>
                 <td></td>
                 <td></td>
@@ -210,7 +242,7 @@ foreach ($entries as $entry) {
             if ($entry->hashEntries) {
                 $hashes_checkbox_id = "hashes-" . sha1($entry->name);
                 ?> <span class="hashes-trigger"><?php
-                    print_entry_icon(DirEntryIcon::HASH);
+                    print_entry_icon(Icon::HASH);
                 ?><div class="hashes">Hashes for <?= htmlspecialchars($entry->name) ?>:<ul><?php
                         foreach ($entry->hashEntries as $hashEntry) {
                             if ($hashEntry->size < 1024) {
@@ -222,7 +254,15 @@ foreach ($entries as $entry) {
                                 ?></span><?php
                             }
                         }
-                ?></ul></div></span> <?php } ?></td>
+                ?></ul></div></span> <?php }
+            if ($entry->versionMetadata && $entry->versionMetadata->relocatedTo) {
+                ?><span class="relocation-info"> → relocated to: <a href="/<?= $entry->versionMetadata->relocatedTo->pathFromRoot() ?>"
+                ><?php
+                echo $entry->versionMetadata->relocatedTo->artifactId;
+                if ($entry->type !== DirEntryType::ARTIFACT_DIR) {
+                    echo '/' . $entry->versionMetadata->relocatedTo->version;
+                }?></a></span><?php
+            } ?></td>
                 <td class="no-wrap"><?php if ($entry->type->isFile() && $entry->size) {
                     echo human_file_size($entry->size);
                 } ?></td>

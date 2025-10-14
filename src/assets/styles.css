@@ -1,6 +1,7 @@
 :root {
     color-scheme: light dark;
-    --bg-color: light-dark(#e8e3e0, #333030);
+	font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+	--bg-color: light-dark(#e8e3e0, #333030);
     --subtle-contrast-color: light-dark(#333030, #e8e3e0);
     --subtle-bg-color: color-mix(in srgb, var(--bg-color) 90%, var(--subtle-contrast-color));
     --text-color: light-dark(black, white);
@@ -8,9 +9,17 @@
 }
 
 * {
-    font-family: sans-serif;
     margin: 0;
     accent-color: var(--primary-color);
+}
+
+@view-transition {
+	navigation: auto;
+}
+
+pre {
+	white-space: pre-wrap;
+	text-wrap: pretty;
 }
 
 a {
@@ -60,6 +69,10 @@ pre > code {
     overflow: hidden;
 }
 
+.select-all {
+    user-select: all;
+}
+
 .icon {
 	display: inline-block;
 	width: 16px;
@@ -77,6 +90,7 @@ body {
     max-width: 90ch;
     padding: 1rem;
     margin-inline: auto;
+	container: --page / inline-size;
 }
 
 .fancy-quotes {
@@ -91,6 +105,34 @@ body {
     &::before, &::after {
         color: var(--primary-color);
     }
+}
+
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 0.5rem;
+
+	details {
+		display: contents;
+	}
+	summary {
+		order: -1;
+		margin-bottom: 0.5rem;
+		border-radius: var(--border-radius);
+		border: 2px solid var(--subtle-bg-color);
+		padding: 0.125rem 0.5rem;
+		user-select: none;
+
+		details[open] > & {
+			background: var(--subtle-bg-color);
+		}
+	}
+	.content {
+		width: 100cqw;
+	}
+	&:not(:has(details[open])) {
+		margin-bottom: -0.5rem;
+	}
 }
 
 table {
@@ -170,6 +212,10 @@ th, td {
             user-select: all;
         }
     }
+}
+
+.relocation-info {
+	display: inline-block;
 }
 
 footer {
