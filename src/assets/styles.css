@@ -14,9 +14,11 @@
     accent-color: var(--primary-color);
 }
 
+/*
 @view-transition {
 	navigation: auto;
 }
+*/
 
 pre {
 	white-space: pre-wrap;
