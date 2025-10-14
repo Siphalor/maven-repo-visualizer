@@ -183,17 +183,17 @@ if (
     echo '<h2>Artifact information</h2>';
     echo '<div class="links">';
     if ($directory->versionMetadata->website) {
-        ?><a href="<?= htmlspecialchars($directory->versionMetadata->website) ?>"><?php print_entry_icon(Icon::HOMEPAGE) ?> Homepage</a><?php
+        ?><a href="<?= urlencode($directory->versionMetadata->website) ?>"><?php print_entry_icon(Icon::HOMEPAGE) ?> Homepage</a><?php
     }
     if ($directory->versionMetadata->sourcesWebsite) {
-        ?><a href="<?= htmlspecialchars($directory->versionMetadata->sourcesWebsite) ?>"><?php print_entry_icon(Icon::SOURCE_CODE) ?> Source code</a><?php
+        ?><a href="<?= urlencode($directory->versionMetadata->sourcesWebsite) ?>"><?php print_entry_icon(Icon::SOURCE_CODE) ?> Source code</a><?php
     }
     echo '</div>';
     if ($directory->versionMetadata->relocatedTo) {
         echo '<div>';
         print_entry_icon(Icon::ARCHIVED);
         echo ' Relocated to <a href="/';
-        echo htmlspecialchars($directory->versionMetadata->relocatedTo->pathFromRoot());
+        echo urlencode($directory->versionMetadata->relocatedTo->pathFromRoot());
         echo '">';
         echo htmlspecialchars($directory->versionMetadata->relocatedTo->groupId);
         echo '/';
@@ -218,30 +218,35 @@ if ($directory->versionMetadata) {
                 <summary>Maven</summary>
                 <div class="content">
                     <pre><code class="select-all">&lt;dependency&gt;
-    &lt;groupId&gt;<?= $versionCoords->groupId ?>&lt;/groupId&gt;
-    &lt;artifactId&gt;<?= $versionCoords->artifactId ?>&lt;/artifactId&gt;
-    &lt;version&gt;<?= $versionCoords->version ?>&lt;/version&gt;
+    &lt;groupId&gt;<?= htmlspecialchars($versionCoords->groupId) ?>&lt;/groupId&gt;
+    &lt;artifactId&gt;<?= htmlspecialchars($versionCoords->artifactId) ?>&lt;/artifactId&gt;
+    &lt;version&gt;<?= htmlspecialchars($versionCoords->version) ?>&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
                 </div>
             </details>
             <details name="usage">
                 <summary>Gradle</summary>
                 <div class="content">
-                    <pre><code class="select-all">implementation("<?= $versionCoords->groupId ?>:<?= $versionCoords->artifactId ?>:<?= $versionCoords->version ?>")</code></pre>
+                    <pre><code class="select-all">implementation("<?=
+                            htmlspecialchars($versionCoords->groupId) ?>:<?=
+                            htmlspecialchars($versionCoords->artifactId) ?>:<?=
+                            htmlspecialchars($versionCoords->version) ?>")</code></pre>
                 </div>
             </details>
             <details name="usage">
                 <summary>Gradle (Version Catalog)</summary>
                 <div class="content">
                     <pre><code>[versions]
-<?= $versionCoords->artifactId ?> = "<?= $versionCoords->version ?>"
+<?= htmlspecialchars($versionCoords->artifactId) ?> = "<?= htmlspecialchars($versionCoords->version) ?>"
 
 [libraries]
-<?= $versionCoords->artifactId ?> = { module = "<?= $versionCoords->groupId ?>:<?= $versionCoords->artifactId ?>", version.ref = "<?= $versionCoords->artifactId ?>" }</code></pre>
+<?= htmlspecialchars($versionCoords->artifactId) ?> = { module = "<?=
+                            htmlspecialchars($versionCoords->groupId) ?>:<?=
+                            htmlspecialchars($versionCoords->artifactId) ?>", version.ref = "<?=
+                            htmlspecialchars($versionCoords->artifactId) ?>" }</code></pre>
             </details>
         </div>
 <?php
-        $latest_version = $directory->versionMetadata->coordinates->version;
 }
 ?>
     <hr/>
@@ -297,11 +302,11 @@ foreach ($entries as $entry) {
                         }
                 ?></ul></div></span> <?php }
             if ($entry->versionMetadata && $entry->versionMetadata->relocatedTo) {
-                ?> <span class="relocation-info">→ relocated to: <a href="/<?= $entry->versionMetadata->relocatedTo->pathFromRoot() ?>"
+                ?> <span class="relocation-info">→ relocated to: <a href="/<?= urlencode($entry->versionMetadata->relocatedTo->pathFromRoot()) ?>"
                 ><?php
-                echo $entry->versionMetadata->relocatedTo->artifactId;
+                echo htmlspecialchars($entry->versionMetadata->relocatedTo->artifactId);
                 if ($entry->type !== DirEntryType::ARTIFACT_DIR) {
-                    echo '/' . $entry->versionMetadata->relocatedTo->version;
+                    echo '/' . htmlspecialchars($entry->versionMetadata->relocatedTo->version);
                 }?></a></span><?php
             } ?></td>
                 <td class="no-wrap"><?php if ($entry->type->isFile() && $entry->size) {
