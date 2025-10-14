@@ -25,7 +25,7 @@ A php directory listing for Maven repositories.
 
 1. **Clone the repository:**  
    ```bash
-   git clone https://gitea.siphalor.de/Siphalor/maven-repo-visualizer mavenrv
+   git clone https://github.com/Siphalor/maven-repo-visualizer mavenrv
    cd mavenrv
    ```
 
