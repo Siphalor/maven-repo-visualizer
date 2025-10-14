@@ -109,27 +109,27 @@ class DirEntry
         }
     }
 
-    private function resolveMavenMetadata()
+    private function resolveMavenMetadata(): void
     {
         $this->artifactMetadata = new ArtifactMetadata();
         $xml = simplexml_load_file($this->path());
         if (!$xml) {
-            return null;
+            return;
         }
         $this->artifactMetadata->groupId = (string) $xml->groupId;
         $this->artifactMetadata->artifactId = (string) $xml->artifactId;
         $versioning = $xml->versioning;
         if (!$versioning) {
-            return null;
+            return;
         }
-        $this->artifactMetadata->latestVersion = $versioning->latest;
+        $this->artifactMetadata->latestVersion = $versioning->latest ?? $versioning->release;
     }
 
-    private function resolveMavenPom()
+    private function resolveMavenPom(): void
     {
         $xml = simplexml_load_file($this->path());
         if (!$xml) {
-            return null;
+            return;
         }
         $this->versionMetadata = new ArtifactVersionMetadata();
         $this->versionMetadata->coordinates = new ArtifactCoordinates();

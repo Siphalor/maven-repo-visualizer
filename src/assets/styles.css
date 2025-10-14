@@ -80,7 +80,6 @@ pre > code {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	vertical-align: middle;
 	background-color: currentColor;
 	mask: var(--icon-url);
 }
@@ -108,6 +107,12 @@ body {
     &::before, &::after {
         color: var(--primary-color);
     }
+}
+
+.links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
 }
 
 .tabs {
@@ -168,7 +173,7 @@ th, td {
         border-radius: 0 var(--border-radius) var(--border-radius) 0;
     }
 
-    svg {
+    svg, .icon {
         vertical-align: middle;
     }
 }

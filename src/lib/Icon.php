@@ -14,6 +14,8 @@ enum Icon
     case OTHER_DIR;
     case HASH;
     case ARCHIVED;
+    case HOMEPAGE;
+    case SOURCE_CODE;
 
     public function iconName(): string
     {
@@ -28,6 +30,8 @@ enum Icon
             self::OTHER_DIR => 'dir',
             self::HASH => 'hash',
             self::ARCHIVED => 'archived',
+            self::HOMEPAGE => 'homepage',
+            self::SOURCE_CODE => 'source_code',
         };
     }
 
@@ -44,6 +48,8 @@ enum Icon
             self::OTHER_DIR => 'directory',
             self::HASH => 'hash',
             self::ARCHIVED => 'archived',
+            self::HOMEPAGE => 'homepage',
+            self::SOURCE_CODE => 'source code',
         };
     }
 }

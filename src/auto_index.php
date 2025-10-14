@@ -171,9 +171,46 @@ foreach ($path_parts as $i => $path_part) {
     echo htmlspecialchars($path_part);
     echo '</a>/';
 }
+if (
+    $directory->versionMetadata
+    && (
+        $directory->versionMetadata->website
+            || $directory->versionMetadata->sourcesWebsite
+            || $directory->versionMetadata->description
+            || $directory->versionMetadata->relocatedTo
+    )
+) {
+    echo '<h2>Artifact information</h2>';
+    echo '<div class="links">';
+    if ($directory->versionMetadata->website) {
+        ?><a href="<?= htmlspecialchars($directory->versionMetadata->website) ?>"><?php print_entry_icon(Icon::HOMEPAGE) ?> Homepage</a><?php
+    }
+    if ($directory->versionMetadata->sourcesWebsite) {
+        ?><a href="<?= htmlspecialchars($directory->versionMetadata->sourcesWebsite) ?>"><?php print_entry_icon(Icon::SOURCE_CODE) ?> Source code</a><?php
+    }
+    echo '</div>';
+    if ($directory->versionMetadata->relocatedTo) {
+        echo '<div>';
+        print_entry_icon(Icon::ARCHIVED);
+        echo ' Relocated to <a href="/';
+        echo htmlspecialchars($directory->versionMetadata->relocatedTo->pathFromRoot());
+        echo '">';
+        echo htmlspecialchars($directory->versionMetadata->relocatedTo->groupId);
+        echo '/';
+        echo htmlspecialchars($directory->versionMetadata->relocatedTo->artifactId);
+        if ($directory->type !== DirEntryType::ARTIFACT_DIR) {
+            echo '/';
+            echo htmlspecialchars($directory->versionMetadata->relocatedTo->version);
+        }
+        echo '</a></div>';
+    }
+    if ($directory->versionMetadata->description) {
+        echo '<p>' . htmlspecialchars($directory->versionMetadata->description) . '</p>';
+    }
+}
 ?></p>
 <?php
-if ($directory->versionMetadata !== null) {
+if ($directory->versionMetadata) {
     $versionCoords = $directory->versionMetadata->coordinates; ?>
         <h2>Usage</h2>
         <div class="tabs">
@@ -260,7 +297,7 @@ foreach ($entries as $entry) {
                         }
                 ?></ul></div></span> <?php }
             if ($entry->versionMetadata && $entry->versionMetadata->relocatedTo) {
-                ?><span class="relocation-info"> → relocated to: <a href="/<?= $entry->versionMetadata->relocatedTo->pathFromRoot() ?>"
+                ?> <span class="relocation-info">→ relocated to: <a href="/<?= $entry->versionMetadata->relocatedTo->pathFromRoot() ?>"
                 ><?php
                 echo $entry->versionMetadata->relocatedTo->artifactId;
                 if ($entry->type !== DirEntryType::ARTIFACT_DIR) {
