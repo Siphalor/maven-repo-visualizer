@@ -341,13 +341,11 @@ $heading = $dir_path === '/' ? 'h2' : 'h3';
 }</code></pre>
                 </div>
             </details>
+        </div>
             <?php
             if (isset($directory->subEntries['README.md'])) {
                 $readme_path = $directory->subEntries['README.md']->path(); ?>
-        <hr class="meta-description-divider" />
-        <section class="rendered-markdown">
-            <?= format_markdown(file_get_contents($readme_path)) ?>
-        </section>
+        <hr class="meta-description-divider" /><section class="rendered-markdown"><?= format_markdown(file_get_contents($readme_path)) ?></section>
     <?php } ?>
     </div>
     <hr class="meta-file-list-divider" />
