@@ -141,7 +141,10 @@ function resolve_gradle_catalog_alias(string $artifactId): string
     return preg_replace('/\W+/', '-', $base);
 }
 
-$dir_path = $_SERVER['SCRIPT_NAME'];
+$dir_path = $_SERVER['PATH_INFO'];
+if (!str_starts_with($dir_path, '/')) {
+    $dir_path = '/' . $dir_path;
+}
 $absolute_dir_path = $_SERVER['DOCUMENT_ROOT'] . $dir_path;
 
 $directory = DirEntry::forPath($absolute_dir_path);
@@ -154,6 +157,26 @@ foreach (array_filter($directory->subEntries, fn ($entry) => $entry->type->isDir
     $subDir->resolveDirectory();
 }
 
+$repository_root_uri = '';
+{
+    $index = strrpos($_SERVER['REQUEST_URI'], $dir_path);
+    if ($index === false) {
+        $path = '/';
+    } else {
+        $path = substr($_SERVER['REQUEST_URI'], 0, $index);
+    }
+    if (!str_starts_with($path, '/')) {
+        $path = '/' . $path;
+    }
+    if (preg_match('{\w+://}', $path)) {
+        $repository_root_uri = $path;
+    } else {
+        $https = (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'https') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+        $scheme = $https ? 'https' : 'http';
+        $port = $_SERVER['SERVER_PORT'] === ($https ? 443 : 80) ? '' : ':' . $_SERVER['SERVER_PORT'];
+        $repository_root_uri = "$scheme://$_SERVER[SERVER_NAME]$port$path";
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -171,7 +194,7 @@ foreach (array_filter($directory->subEntries, fn ($entry) => $entry->type->isDir
     <?php } else { ?>
         <link rel="stylesheet" href="<?= ASSETS_SERVE_PATH ?>/styles.css">
     <?php } ?>
-    <title><?= SITE_NAME ?>: <?= htmlspecialchars(basename($dir_path)) ?></title>
+    <title><?= htmlspecialchars(SITE_NAME) ?>: <?= htmlspecialchars(basename($dir_path)) ?></title>
 </head>
 <body>
 <main>
@@ -288,10 +311,34 @@ if ($directory->versionMetadata) {
         </div>
 <?php
 }
+$heading = $dir_path === '/' ? 'h2' : 'h3';
 ?>
-    <?php
-    if (isset($directory->subEntries['README.md'])) {
-        $readme_path = $directory->subEntries['README.md']->path(); ?>
+        <<?=$heading?>>Repository Setup</<?=$heading?>>
+        <div class="tabs">
+            <details name="usage">
+                <summary>Maven (settings.xml)</summary>
+                <div class="content">
+                    <pre><code>&lt;repository&gt;
+    &lt;id&gt;<?= htmlspecialchars($_SERVER['SERVER_NAME']) ?>&lt;/id&gt;
+    &lt;name&gt;<?= htmlspecialchars(SITE_NAME) ?>&lt;/name&gt;
+    &lt;url&gt;<?= htmlspecialchars($repository_root_uri) ?>&lt;/url&gt;
+&lt;/repository&gt;</code></pre>
+                </div>
+            </details>
+            <details name="usage">
+                <summary>Gradle</summary>
+                <div class="content">
+                    <pre><code>repositories {
+    maven {
+        name = "<?= htmlspecialchars(SITE_NAME) ?>"
+        url = uri("<?= htmlspecialchars($repository_root_uri) ?>")
+    }
+}</code></pre>
+                </div>
+            </details>
+            <?php
+            if (isset($directory->subEntries['README.md'])) {
+                $readme_path = $directory->subEntries['README.md']->path(); ?>
         <hr class="meta-description-divider" />
         <section class="rendered-markdown">
             <?= format_markdown(file_get_contents($readme_path)) ?>
