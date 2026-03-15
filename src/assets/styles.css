@@ -7,6 +7,12 @@
     --text-color: light-dark(black, white);
 	--subtle-text-color: color-mix(in srgb, var(--text-color) 60%, var(--subtle-bg-color));
     --border-radius: 0.5rem;
+	@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+		@media not (prefers-reduced-motion: reduce) {
+			--details-summary-transition-duration: 0.2s;
+			--details-summary-open-delay: 0.2s;
+		}
+	}
 }
 
 * {
@@ -33,10 +39,12 @@ summary {
 		margin-right: 0.5ch;
 		border-color: currentColor transparent transparent;
 		rotate: -90deg;
+		transition: rotate var(--details-summary-transition-duration, 0s) ease-in-out;
 	}
 }
 details[open] summary::before {
 	rotate: 0deg;
+	transition-delay: var(--details-summary-open-delay, 0s);
 }
 
 pre {
@@ -141,24 +149,53 @@ body {
 
 	details {
 		display: contents;
-	}
-	summary {
-		order: -1;
-		margin-bottom: 0.5rem;
-		border-radius: var(--border-radius);
-		border: 2px solid var(--subtle-bg-color);
-		padding: 0.125rem 0.5rem;
-		user-select: none;
 
-		details[open] > & {
-			background: var(--subtle-bg-color);
+		summary {
+			order: -1;
+			margin-bottom: 0.5rem;
+			border-radius: var(--border-radius);
+			border: 2px solid var(--subtle-bg-color);
+			padding: 0.125rem 0.5rem;
+			user-select: none;
+
+			details[open] > & {
+				background: var(--subtle-bg-color);
+			}
 		}
-	}
-	.content {
-		width: 100cqw;
+		.content {
+			width: 100cqw;
+		}
 	}
 	&:not(:has(details[open])) {
 		margin-bottom: -0.5rem;
+	}
+	@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+		@media not (prefers-reduced-motion: reduce) {
+			transition: margin-bottom var(--details-summary-transition-duration, 0s) ease-in-out var(--tabs-transition-open-delay, 0s);
+
+			&:has(details[open]) {
+				--tabs-transition-open-delay: var(--details-summary-open-delay);
+			}
+			details {
+				&::details-content {
+					display: block;
+					height: 0;
+					opacity: 0;
+					interpolate-size: allow-keywords;
+					overflow-y: hidden;
+					transition:
+						content-visibility var(--details-summary-transition-duration) allow-discrete,
+						height var(--details-summary-transition-duration) ease-in-out,
+						opacity var(--details-summary-transition-duration) ease-in-out;
+				}
+
+				&[open]::details-content {
+					height: auto;
+					opacity: 1;
+					transition-delay: var(--details-summary-open-delay);
+				}
+			}
+		}
 	}
 }
 
