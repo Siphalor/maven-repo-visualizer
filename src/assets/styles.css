@@ -266,3 +266,29 @@ footer {
         }
     }
 }
+
+@media not (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: auto;
+	}
+
+	.meta {
+		view-transition-name: meta;
+	}
+
+	.meta-description-divider {
+		view-transition-name: meta-description-divider;
+	}
+
+	.meta-file-list-divider {
+		view-transition-name: meta-table-divider;
+	}
+
+	.file-list-footer-divider {
+		view-transition-name: table-footer-divider;
+	}
+
+	.file-list {
+		view-transition-name: file-list;
+	}
+}
