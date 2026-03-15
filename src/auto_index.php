@@ -173,7 +173,7 @@ $repository_root_uri = '';
     } else {
         $https = (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'https') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
         $scheme = $https ? 'https' : 'http';
-        $port = $_SERVER['SERVER_PORT'] === ($https ? 443 : 80) ? '' : ':' . $_SERVER['SERVER_PORT'];
+        $port = $_SERVER['SERVER_PORT'] == ($https ? 443 : 80) ? '' : ':' . $_SERVER['SERVER_PORT'];
         $repository_root_uri = "$scheme://$_SERVER[SERVER_NAME]$port$path";
     }
 }
