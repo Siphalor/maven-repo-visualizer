@@ -132,8 +132,13 @@ function get_entry_icon(DirEntry $entry): Icon
 
 function resolve_gradle_catalog_alias(string $artifactId): string
 {
-    $last_dot = strrpos($artifactId, '.');
-    return $last_dot ? substr($artifactId, $last_dot + 1) : $artifactId;
+    $matches = array();
+    if (preg_match(GRADLE_CATALOG_ALIAS_REGEX, $artifactId, $matches) && isset($matches[1])) {
+        $base = $matches[1];
+    } else {
+        $base = $artifactId;
+    }
+    return preg_replace('/\W+/', '-', $base);
 }
 
 $dir_path = $_SERVER['SCRIPT_NAME'];
@@ -289,7 +294,7 @@ if ($directory->versionMetadata) {
     <?php } ?>
     </div>
     <hr class="meta-file-list-divider" />
-    <table class="file-list">
+    <table>
         <thead>
         <tr>
             <th class="short-min-width"><span class="sr-only">Type</span></th>
