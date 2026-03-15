@@ -194,7 +194,12 @@ $repository_root_uri = '';
     <?php } else { ?>
         <link rel="stylesheet" href="<?= ASSETS_SERVE_PATH ?>/styles.css">
     <?php } ?>
-    <title><?= htmlspecialchars(SITE_NAME) ?>: <?= htmlspecialchars(basename($dir_path)) ?></title>
+    <title><?php
+echo htmlspecialchars(SITE_NAME);
+if ($dir_path !== '/') {
+    echo ': '.htmlspecialchars(basename($dir_path));
+}
+?></title>
 </head>
 <body>
 <main>
@@ -202,7 +207,7 @@ $repository_root_uri = '';
     <h1>Index of <span class="fancy-quotes"><?= htmlspecialchars(basename($dir_path)) ?: '/' ?></span></h1>
     <p>Full path: /<?php
 
-        $path_parts = array_filter(explode('/', substr($dir_path, 1)));
+    $path_parts = array_filter(explode('/', substr($dir_path, 1)));
 foreach ($path_parts as $i => $path_part) {
     echo '<a href="';
     echo str_repeat('../', count($path_parts) - $i - 1);
