@@ -4,8 +4,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/config.php';
 
 use MavenRV\DirEntry;
-use MavenRV\Icon;
+use MavenRV\DirEntrySubType;
 use MavenRV\DirEntryType;
+use MavenRV\Icon;
 use MavenRV\SemverLikeComparator;
 
 function format_markdown(string $text): string
@@ -114,6 +115,9 @@ function get_entry_icon(DirEntry $entry): Icon
         case DirEntryType::GRADLE_MODULE_FILE:
             return Icon::METADATA_FILE;
         case DirEntryType::ARTIFACT_DIR:
+            if ($entry->subType == DirEntrySubType::GRADLE_PLUGIN) {
+                return Icon::GRADLE_PLUGIN_DIR;
+            }
             return Icon::ARTIFACT_DIR;
         case DirEntryType::VERSION_DIR:
             return Icon::VERSION_DIR;
@@ -124,6 +128,12 @@ function get_entry_icon(DirEntry $entry): Icon
                 return Icon::OTHER_FILE;
             }
     }
+}
+
+function resolve_gradle_catalog_alias(string $artifactId): string
+{
+    $last_dot = strrpos($artifactId, '.');
+    return $last_dot ? substr($artifactId, $last_dot + 1) : $artifactId;
 }
 
 $dir_path = $_SERVER['SCRIPT_NAME'];
@@ -212,9 +222,17 @@ if (
 ?></p>
 <?php
 if ($directory->versionMetadata) {
-    $versionCoords = $directory->versionMetadata->coordinates; ?>
+    $versionCoords = $directory->versionMetadata->coordinates;
+    if ($directory->subType == DirEntrySubType::GRADLE_PLUGIN) {
+        $gradlePluginId = preg_replace('/\.gradle\.plugin$/', '', $versionCoords->artifactId);
+        $artifactAlias = resolve_gradle_catalog_alias($gradlePluginId);
+    } else {
+        $artifactAlias = resolve_gradle_catalog_alias($versionCoords->artifactId);
+    }
+    ?>
         <h2>Usage</h2>
         <div class="tabs">
+            <?php if ($directory->subType != DirEntrySubType::GRADLE_PLUGIN) { ?>
             <details name="usage">
                 <summary>Maven</summary>
                 <div class="content">
@@ -225,9 +243,16 @@ if ($directory->versionMetadata) {
 &lt;/dependency&gt;</code></pre>
                 </div>
             </details>
+            <?php } ?>
             <details name="usage">
                 <summary>Gradle</summary>
                 <div class="content">
+                    <?php if (isset($gradlePluginId)) { ?>
+                    <pre><code>plugins {
+    <span class="select-all">id("<?= htmlspecialchars($gradlePluginId) ?>")</span>
+}</code></pre>
+                        For use as build dependency:
+                    <?php } ?>
                     <pre><code class="select-all">implementation("<?=
                             htmlspecialchars($versionCoords->groupId) ?>:<?=
                             htmlspecialchars($versionCoords->artifactId) ?>:<?=
@@ -237,14 +262,18 @@ if ($directory->versionMetadata) {
             <details name="usage">
                 <summary>Gradle (Version Catalog)</summary>
                 <div class="content">
-                    <pre><code>[versions]
-<?= htmlspecialchars($versionCoords->artifactId) ?> = "<?= htmlspecialchars($versionCoords->version) ?>"
-
-[libraries]
-<?= htmlspecialchars($versionCoords->artifactId) ?> = { module = "<?=
-                            htmlspecialchars($versionCoords->groupId) ?>:<?=
-                            htmlspecialchars($versionCoords->artifactId) ?>", version.ref = "<?=
-                            htmlspecialchars($versionCoords->artifactId) ?>" }</code></pre>
+                    <pre><code><?php
+    echo "[versions]\n".htmlspecialchars($artifactAlias).' = "'.htmlspecialchars($versionCoords->version).'"';
+    if (isset($gradlePluginId)) {
+        echo "\n\n[plugins]\n".htmlspecialchars($artifactAlias);
+        echo ' = { id = "'.htmlspecialchars($gradlePluginId);
+        echo '", version.ref = "'.htmlspecialchars($artifactAlias).'" }';
+    }
+    echo "\n\n[libraries]\n".htmlspecialchars($artifactAlias);
+    echo ' = { module = "'.htmlspecialchars($versionCoords->groupId).':';
+    echo htmlspecialchars($versionCoords->artifactId);
+    echo '", version.ref = "'.htmlspecialchars($artifactAlias).'" }';
+    ?></code></pre>
             </details>
         </div>
 <?php

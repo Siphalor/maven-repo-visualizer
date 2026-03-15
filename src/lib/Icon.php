@@ -16,6 +16,7 @@ enum Icon
     case ARCHIVED;
     case HOMEPAGE;
     case SOURCE_CODE;
+    case GRADLE_PLUGIN_DIR;
 
     public function iconName(): string
     {
@@ -32,6 +33,7 @@ enum Icon
             self::ARCHIVED => 'archived',
             self::HOMEPAGE => 'homepage',
             self::SOURCE_CODE => 'source_code',
+            self::GRADLE_PLUGIN_DIR => 'gradle_plugin_dir',
         };
     }
 
@@ -50,6 +52,7 @@ enum Icon
             self::ARCHIVED => 'archived',
             self::HOMEPAGE => 'homepage',
             self::SOURCE_CODE => 'source code',
+            self::GRADLE_PLUGIN_DIR => 'Gradle plugin directory',
         };
     }
 }

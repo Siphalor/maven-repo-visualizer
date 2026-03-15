@@ -10,6 +10,7 @@ class DirEntry
     public string $name;
     public string $extension;
     public DirEntryType $type;
+    public ?DirEntrySubType $subType = null;
     public ?int $size = null;
     public int $lastModified;
 
@@ -88,6 +89,9 @@ class DirEntry
             $this->type = DirEntryType::VERSION_DIR;
             $mavenPomFile->resolveMavenPom();
             $this->versionMetadata = $mavenPomFile->versionMetadata;
+        }
+        if ($this->versionMetadata && str_ends_with($this->versionMetadata->coordinates->artifactId, '.gradle.plugin')) {
+            $this->subType = DirEntrySubType::GRADLE_PLUGIN;
         }
 
         foreach ($this->subEntries as $subEntryName => $subEntry) {
