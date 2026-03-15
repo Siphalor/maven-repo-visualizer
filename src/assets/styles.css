@@ -85,9 +85,16 @@ code {
     font-family: monospace;
 }
 
-pre > code {
-    display: block;
-    padding: 0.5rem;
+pre:has(> code) {
+	overflow-x: auto;
+	container: inline-size;
+
+	& > code {
+		display: inline-block;
+		padding: 0.5rem;
+		min-width: 100cqw;
+		box-sizing: border-box;
+	}
 }
 
 .sr-only {
