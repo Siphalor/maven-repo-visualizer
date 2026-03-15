@@ -25,6 +25,7 @@ define(
         # language=regexp
         ?? '/([a-zA-Z0-9]*[a-zA-Z][a-zA-Z0-9]*(?:[-_][a-zA-Z0-9]*[a-zA-Z][a-zA-Z0-9]*)*)(?:[-_][^a-zA-Z]+)?$/'
 );
+define('GRADLE_CATALOG_LIBRARY_STYLE', $_ENV['MAVENRV_GRADLE_CATALOG_LIBRARY_STYLE'] ?? 'group_name');
 
 # Assets
 define('ASSETS_SERVE_PATH', $_ENV['MAVENRV_ASSETS_SERVE_PATH'] ?? '$EMBED');

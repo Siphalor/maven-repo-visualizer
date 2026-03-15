@@ -275,8 +275,13 @@ if ($directory->versionMetadata) {
         echo '", version.ref = "'.htmlspecialchars($artifactAlias).'" }';
     }
     echo "\n\n[libraries]\n".htmlspecialchars($artifactAlias);
-    echo ' = { module = "'.htmlspecialchars($versionCoords->groupId).':';
-    echo htmlspecialchars($versionCoords->artifactId);
+    if (GRADLE_CATALOG_LIBRARY_STYLE == 'module') {
+        echo ' = { module = "' . htmlspecialchars($versionCoords->groupId) . ':';
+        echo htmlspecialchars($versionCoords->artifactId);
+    } else {
+        echo ' = { group = "' . htmlspecialchars($versionCoords->groupId);
+        echo '", name = "' . htmlspecialchars($versionCoords->artifactId);
+    }
     echo '", version.ref = "'.htmlspecialchars($artifactAlias).'" }';
     ?></code></pre>
             </details>
