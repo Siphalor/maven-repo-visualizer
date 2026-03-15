@@ -15,10 +15,29 @@
 }
 
 /*
-@view-transition {
-	navigation: auto;
+Override the default details/summary marker, since Safari/iOS 26.1 for some reason display the right triangle as an Emoji.
+Since all other unicode symbols make the rendering in other browsers worse, this completely replaces the default marker.
+ */
+summary {
+	list-style-type: none;
+	--arrow-size: 0.6em;
+
+	&::before {
+		content: "";
+		display: inline-block;
+		width: 0;
+		height: 0;
+		border-style: solid;
+		/* the magic number is sin(60°) for an equilateral triangle */
+		border-width: calc(var(--arrow-size) * 0.8660254038) calc(var(--arrow-size) / 2) 0;
+		margin-right: 0.5ch;
+		border-color: currentColor transparent transparent;
+		rotate: -90deg;
+	}
 }
-*/
+details[open] summary::before {
+	rotate: 0deg;
+}
 
 pre {
 	white-space: pre-wrap;
