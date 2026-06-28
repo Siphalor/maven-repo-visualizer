@@ -4,6 +4,7 @@ vendor/
 
 # Tools
 .php-cs-fixer.cache
+node_modules/
 
 # IDEs
 .idea/

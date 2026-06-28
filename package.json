@@ -1,0 +1,21 @@
+{
+	"name": "maven-repo-visualizer",
+	"version": "0.0.0",
+	"description": "",
+	"author": "Siphalor",
+	"license": "MIT",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "^11.9.0",
+			"onFail": "download"
+		}
+	},
+	"type": "module",
+	"scripts": {
+		"prettier": "prettier --write src/**/*.css"
+	},
+	"devDependencies": {
+		"prettier": "^3.8.5"
+	}
+}

@@ -15,7 +15,9 @@
 		}
 	},
 	"scripts": {
-		"php-cs-fixer": "php-cs-fixer --rules=@PSR2 fix src",
+		"fix": "composer fix:php && composer fix:prettier",
+		"fix:php": "php-cs-fixer --rules=@PSR2 fix src",
+		"fix:prettier": "pnpm run prettier",
 		"test": "phpunit tests"
 	},
 	"require": {

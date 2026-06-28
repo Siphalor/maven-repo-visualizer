@@ -1,13 +1,22 @@
 :root {
-    color-scheme: light dark;
-	font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+	color-scheme: light dark;
+	font-family: Optima, Candara, "Noto Sans", source-sans-pro, sans-serif;
 	--bg-color: light-dark(#e8e3e0, #333030);
-    --subtle-contrast-color: light-dark(#333030, #e8e3e0);
-    --subtle-bg-color: color-mix(in srgb, var(--bg-color) 90%, var(--subtle-contrast-color));
-    --text-color: light-dark(black, white);
-	--subtle-text-color: color-mix(in srgb, var(--text-color) 60%, var(--subtle-bg-color));
-    --border-radius: 0.5rem;
-	@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+	--subtle-contrast-color: light-dark(#333030, #e8e3e0);
+	--subtle-bg-color: color-mix(
+		in srgb,
+		var(--bg-color) 90%,
+		var(--subtle-contrast-color)
+	);
+	--text-color: light-dark(black, white);
+	--subtle-text-color: color-mix(
+		in srgb,
+		var(--text-color) 60%,
+		var(--subtle-bg-color)
+	);
+	--border-radius: 0.5rem;
+	@supports (interpolate-size: allow-keywords) and
+		(transition-behavior: allow-discrete) {
 		@media not (prefers-reduced-motion: reduce) {
 			--details-summary-transition-duration: 0.2s;
 			--details-summary-open-delay: 0.2s;
@@ -16,8 +25,8 @@
 }
 
 * {
-    margin: 0;
-    accent-color: var(--primary-color);
+	margin: 0;
+	accent-color: var(--primary-color);
 }
 
 /*
@@ -38,11 +47,13 @@ details {
 			height: 0;
 			border-style: solid;
 			/* the magic number is sin(60°) for an equilateral triangle */
-			border-width: calc(var(--arrow-size) * 0.8660254038) calc(var(--arrow-size) / 2) 0;
+			border-width: calc(var(--arrow-size) * 0.8660254038)
+				calc(var(--arrow-size) / 2) 0;
 			margin-right: 0.5ch;
 			border-color: currentColor transparent transparent;
 			rotate: -90deg;
-			transition: rotate var(--details-summary-transition-duration, 0s) ease-in-out;
+			transition: rotate var(--details-summary-transition-duration, 0s)
+				ease-in-out;
 		}
 	}
 	&[open] > summary::before {
@@ -50,7 +61,8 @@ details {
 		transition-delay: var(--details-summary-open-delay, 0s);
 	}
 
-	@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+	@supports (interpolate-size: allow-keywords) and
+		(transition-behavior: allow-discrete) {
 		@media not (prefers-reduced-motion: reduce) {
 			&::details-content {
 				display: block;
@@ -58,9 +70,11 @@ details {
 				opacity: 0;
 				interpolate-size: allow-keywords;
 				overflow-y: hidden;
-				transition: content-visibility var(--details-summary-transition-duration) allow-discrete,
-				height var(--details-summary-transition-duration) ease-in-out,
-				opacity var(--details-summary-transition-duration) ease-in-out;
+				transition:
+					content-visibility var(--details-summary-transition-duration)
+						allow-discrete,
+					height var(--details-summary-transition-duration) ease-in-out,
+					opacity var(--details-summary-transition-duration) ease-in-out;
 			}
 
 			&[open]::details-content {
@@ -78,36 +92,48 @@ pre {
 }
 
 a {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-color: var(--primary-color);
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: var(--primary-color);
 
-    &:hover {
-        color: var(--primary-color);
-    }
+	&:hover {
+		color: var(--primary-color);
+	}
 }
 
 hr {
-    width: max(80%, 20ch);
-    margin: 3rem auto;
-    border: solid var(--subtle-contrast-color);
-    border-image: linear-gradient(to right, transparent, var(--text-color) 30%, var(--text-color) 70%, transparent) 1 0 0 / 1px 0 0;
-    border-width: 1px 0 0;
+	width: max(80%, 20ch);
+	margin: 3rem auto;
+	border: solid var(--subtle-contrast-color);
+	border-image: linear-gradient(
+			to right,
+			transparent,
+			var(--text-color) 30%,
+			var(--text-color) 70%,
+			transparent
+		)
+		1 0 0 / 1px 0 0;
+	border-width: 1px 0 0;
 }
 
-h1, h2 {
-    margin-block: 1rem 0.5rem;
+h1,
+h2 {
+	margin-block: 1rem 0.5rem;
 }
 
-h3, h4, h5, h6, p {
-    margin-block: 0.5rem;
+h3,
+h4,
+h5,
+h6,
+p {
+	margin-block: 0.5rem;
 }
 
 code {
-    background: var(--subtle-bg-color);
-    padding: 0.25rem;
-    border-radius: var(--border-radius);
-    font-family: monospace;
+	background: var(--subtle-bg-color);
+	padding: 0.25rem;
+	border-radius: var(--border-radius);
+	font-family: monospace;
 }
 
 pre:has(> code) {
@@ -123,16 +149,16 @@ pre:has(> code) {
 }
 
 .sr-only {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
 }
 
 .select-all {
-    user-select: all;
+	user-select: all;
 }
 
 .icon {
@@ -144,28 +170,29 @@ pre:has(> code) {
 }
 
 html {
-    background: var(--bg-color);
+	background: var(--bg-color);
 }
 
 body {
-    max-width: 90ch;
-    padding: 1rem;
-    margin-inline: auto;
+	max-width: 90ch;
+	padding: 1rem;
+	margin-inline: auto;
 	container: --page / inline-size;
 }
 
 .fancy-quotes {
-    &::before {
-        content: open-quote;
-    }
+	&::before {
+		content: open-quote;
+	}
 
-    &::after {
-        content: close-quote;
-    }
+	&::after {
+		content: close-quote;
+	}
 
-    &::before, &::after {
-        color: var(--primary-color);
-    }
+	&::before,
+	&::after {
+		color: var(--primary-color);
+	}
 }
 
 .links {
@@ -202,9 +229,11 @@ body {
 	&:not(:has(details[open])) {
 		margin-bottom: -0.5rem;
 	}
-	@supports (interpolate-size: allow-keywords) and (transition-behavior: allow-discrete) {
+	@supports (interpolate-size: allow-keywords) and
+		(transition-behavior: allow-discrete) {
 		@media not (prefers-reduced-motion: reduce) {
-			transition: margin-bottom var(--details-summary-transition-duration, 0s) ease-in-out var(--tabs-transition-open-delay, 0s);
+			transition: margin-bottom var(--details-summary-transition-duration, 0s)
+				ease-in-out var(--tabs-transition-open-delay, 0s);
 
 			&:has(details[open]) {
 				--tabs-transition-open-delay: var(--details-summary-open-delay);
@@ -214,122 +243,125 @@ body {
 }
 
 table {
-    border-collapse: collapse;
-    width: 100%;
+	border-collapse: collapse;
+	width: 100%;
 }
 
-th, td {
-    padding: 0.25rem 0.5rem;
-    text-align: left;
+th,
+td {
+	padding: 0.25rem 0.5rem;
+	text-align: left;
 
-    &.short-min-width {
-        width: 2ch;
-    }
+	&.short-min-width {
+		width: 2ch;
+	}
 
-    &.no-wrap {
-        white-space: nowrap;
-    }
+	&.no-wrap {
+		white-space: nowrap;
+	}
 
-    &.time {
-        width: max-content;
-        max-width: max-content;
-    }
+	&.time {
+		width: max-content;
+		max-width: max-content;
+	}
 
-    &:first-child {
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-    }
+	&:first-child {
+		border-radius: var(--border-radius) 0 0 var(--border-radius);
+	}
 
-    &:last-child {
-        border-radius: 0 var(--border-radius) var(--border-radius) 0;
-    }
+	&:last-child {
+		border-radius: 0 var(--border-radius) var(--border-radius) 0;
+	}
 
-    svg, .icon {
-        vertical-align: middle;
-    }
+	svg,
+	.icon {
+		vertical-align: middle;
+	}
 }
 
 :is(thead, :nth-child(2n of tr)) :is(td, th) {
-    background: var(--subtle-bg-color);
+	background: var(--subtle-bg-color);
 }
 
 .hashes-trigger {
-    position: relative;
+	position: relative;
 
-    .hashes {
-        display: none;
-        box-sizing: content-box;
-        max-width: 50vw;
-        width: max-content;
-        background: var(--subtle-bg-color);
-        border-radius: var(--border-radius);
-        border: 1px solid var(--subtle-contrast-color);
-        padding: 0.5rem;
-        z-index: 1;
-        font-size: small;
+	.hashes {
+		display: none;
+		box-sizing: content-box;
+		max-width: 50vw;
+		width: max-content;
+		background: var(--subtle-bg-color);
+		border-radius: var(--border-radius);
+		border: 1px solid var(--subtle-contrast-color);
+		padding: 0.5rem;
+		z-index: 1;
+		font-size: small;
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+		ul {
+			list-style: none;
+			padding: 0;
+		}
 
-        li {
-            word-break: break-all;
-        }
+		li {
+			word-break: break-all;
+		}
 
-        .type {
-            font-weight: bold;
-        }
+		.type {
+			font-weight: bold;
+		}
 
-        .hash {
-            font-family: monospace;
-            user-select: all;
-        }
-    }
+		.hash {
+			font-family: monospace;
+			user-select: all;
+		}
+	}
 
-    &:hover .hashes {
-        display: block;
-    }
+	&:hover .hashes {
+		display: block;
+	}
 
-    @media not (prefers-reduced-motion: reduce) {
-        @supports (transition-behavior: allow-discrete) {
-            .hashes {
-                opacity: 0;
-                --hashes-transition-duration: 0.15s;
-                transition: var(--hashes-transition-duration) ease-out opacity,
-                    var(--hashes-transition-duration) display;
-                transition-behavior: allow-discrete;
-            }
-            &:hover .hashes {
-                opacity: 1;
-                display: block;
-            }
-            @starting-style {
-                .hashes.hashes {
-                    opacity: 0;
-                }
-            }
-        }
-    }
+	@media not (prefers-reduced-motion: reduce) {
+		@supports (transition-behavior: allow-discrete) {
+			.hashes {
+				opacity: 0;
+				--hashes-transition-duration: 0.15s;
+				transition:
+					var(--hashes-transition-duration) ease-out opacity,
+					var(--hashes-transition-duration) display;
+				transition-behavior: allow-discrete;
+			}
+			&:hover .hashes {
+				opacity: 1;
+				display: block;
+			}
+			@starting-style {
+				.hashes.hashes {
+					opacity: 0;
+				}
+			}
+		}
+	}
 
-    @supports (position-anchor: --example) {
-        anchor-scope: --hashes-trigger;
-        anchor-name: --hashes-trigger;
+	@supports (position-anchor: --example) {
+		anchor-scope: --hashes-trigger;
+		anchor-name: --hashes-trigger;
 
-        .hashes {
-            position: fixed;
-            position-anchor: --hashes-trigger;
-            position-area: bottom;
-            position-try-order: most-height;
-            position-try-fallbacks: top;
-        }
-    }
-    @supports not (position-anchor: --example) {
-        &:hover .hashes {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    }
+		.hashes {
+			position: fixed;
+			position-anchor: --hashes-trigger;
+			position-area: bottom;
+			position-try-order: most-height;
+			position-try-fallbacks: top;
+		}
+	}
+	@supports not (position-anchor: --example) {
+		&:hover .hashes {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
 }
 
 .relocated {
@@ -341,19 +373,19 @@ th, td {
 }
 
 footer {
-    display: flex;
-    justify-content: center;
-    font-size: x-small;
+	display: flex;
+	justify-content: center;
+	font-size: x-small;
 
-    & > ul {
-        display: contents;
-        list-style: none;
+	& > ul {
+		display: contents;
+		list-style: none;
 
-        & > li:not(:first-child)::before {
-            content: "  ·  ";
-            white-space: pre;
-        }
-    }
+		& > li:not(:first-child)::before {
+			content: "  ·  ";
+			white-space: pre;
+		}
+	}
 }
 
 @media not (prefers-reduced-motion: reduce) {
