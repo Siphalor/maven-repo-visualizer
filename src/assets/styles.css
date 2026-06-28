@@ -257,16 +257,9 @@ th, td {
 
     .hashes {
         display: none;
-    }
-
-    &:hover .hashes {
-        display: block;
-        position: absolute;
         box-sizing: content-box;
-		max-width: 50vw;
-		width: max-content;
-        top: 0;
-        left: 0;
+        max-width: 50vw;
+        width: max-content;
         background: var(--subtle-bg-color);
         border-radius: var(--border-radius);
         border: 1px solid var(--subtle-contrast-color);
@@ -280,7 +273,7 @@ th, td {
         }
 
         li {
-			word-break: break-all;
+            word-break: break-all;
         }
 
         .type {
@@ -290,6 +283,51 @@ th, td {
         .hash {
             font-family: monospace;
             user-select: all;
+        }
+    }
+
+    &:hover .hashes {
+        display: block;
+    }
+
+    @media not (prefers-reduced-motion: reduce) {
+        @supports (transition-behavior: allow-discrete) {
+            .hashes {
+                opacity: 0;
+                --hashes-transition-duration: 0.15s;
+                transition: var(--hashes-transition-duration) ease-out opacity,
+                    var(--hashes-transition-duration) display;
+                transition-behavior: allow-discrete;
+            }
+            &:hover .hashes {
+                opacity: 1;
+                display: block;
+            }
+            @starting-style {
+                .hashes.hashes {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    @supports (position-anchor: --example) {
+        anchor-scope: --hashes-trigger;
+        anchor-name: --hashes-trigger;
+
+        .hashes {
+            position: fixed;
+            position-anchor: --hashes-trigger;
+            position-area: bottom;
+            position-try-order: most-height;
+            position-try-fallbacks: top;
+        }
+    }
+    @supports not (position-anchor: --example) {
+        &:hover .hashes {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     }
 }
